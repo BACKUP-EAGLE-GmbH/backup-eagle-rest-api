@@ -20,9 +20,10 @@ parser.add_option("--host", dest="host", help="BACKUP EAGLE host, (example: 192.
 parser.add_option("--user", dest="username", help="BACKUP EAGLE username")
 parser.add_option("--password", dest="password", help="BACKUP EAGLE password")
 parser.add_option("--config", dest="config", help="User, password, connectionString (required), active (required), credentialsRequired and scheme as json.")
-parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Yerify SSL certificate of connection (default: false)")
+parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Verify SSL certificate of connection (default: false)")
 
 (options, args) = parser.parse_args()
+options.verifySSL = str(options.verifySSL).lower() == "true"
 
 def validate_input():
     if(options.username is None or options.password is None or options.host is None or options.config is None):

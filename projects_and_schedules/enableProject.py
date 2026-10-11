@@ -20,10 +20,11 @@ parser.add_option("--host", dest="host", help="BACKUP EAGLE host, (example: 192.
 parser.add_option("--user", dest="username", help="BACKUP EAGLE username")
 parser.add_option("--password", dest="password", help="BACKUP EAGLE password")
 parser.add_option("--enable", dest="enable", help="Enable (true) or disable (false) the project")
-parser.add_option("--project", dest="project", help="BAProject with required fields comment, domainName, nodeName and serverName as json data. serverName, domainName and nodeName may contain “*” as wildcard.")
-parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Yerify SSL certificate of connection (default: false)")
+parser.add_option("--project", dest="project", help="BAProject with required fields comment, domainName, nodeName and serverName as json data. serverName, domainName and nodeName may contain '*' as wildcard.")
+parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Verify SSL certificate of connection (default: false)")
 
 (options, args) = parser.parse_args()
+options.verifySSL = str(options.verifySSL).lower() == "true"
 
 def validate_input():
     if(options.username is None or options.password is None or options.host is None or options.enable is None or options.project is None):
@@ -35,7 +36,7 @@ def main():
     session.auth = (options.username, options.password)
 
     url = "https://" + options.host + ":10987/api/rest/baproject/"
-    if(options.enable == "true"):
+    if(options.enable.lower() == "true"):
         url += "activate-baproject"
     else:
         url += "deactivate-baproject"

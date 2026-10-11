@@ -21,9 +21,10 @@ parser.add_option("--user", dest="username", help="BACKUP EAGLE username")
 parser.add_option("--password", dest="password", help="BACKUP EAGLE password")
 parser.add_option("--group-id", dest="groupId", help="Id of the user group.")
 parser.add_option("--group", dest="group", help="Name (required), description (required), directoryAlias (required) and roleIds as json.")
-parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Yerify SSL certificate of connection (default: false)")
+parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Verify SSL certificate of connection (default: false)")
 
 (options, args) = parser.parse_args()
+options.verifySSL = str(options.verifySSL).lower() == "true"
 
 def validate_input():
     if(options.username is None or options.password is None or options.host is None or options.groupId is None or options.group is None):

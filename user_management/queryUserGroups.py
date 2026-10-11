@@ -20,10 +20,12 @@ parser.add_option("--host", dest="host", help="BACKUP EAGLE host, (example: 192.
 parser.add_option("--user", dest="username", help="BACKUP EAGLE username")
 parser.add_option("--password", dest="password", help="BACKUP EAGLE password")
 parser.add_option("--group-id", dest="groupId", help="Query user group with specific id (optional)")
-parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Yerify SSL certificate of connection (default: false)")
+parser.add_option("--verify-ssl", dest="verifySSL", default=False, help="Verify SSL certificate of connection (default: false)")
 parser.add_option("--pretty-print", dest="prettyPrint", default=False, help="Pretty printing of the response (default: false)")
 
 (options, args) = parser.parse_args()
+options.verifySSL = str(options.verifySSL).lower() == "true"
+options.prettyPrint = str(options.prettyPrint).lower() == "true"
 
 def validate_input():
     if(options.username is None or options.password is None or options.host is None):

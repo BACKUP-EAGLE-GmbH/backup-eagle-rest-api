@@ -1,7 +1,7 @@
-[![BACKUP EAGLE Logo](https://images.schmitz-rz-consult.de/github/logo_backupeagle.png)](https://www.schmitz-rz-consult.de/de/)
+[![BACKUP EAGLE Logo](https://images.schmitz-rz-consult.de/github/logo_backupeagle.png)](https://www.backup-eagle.com/)
 
-# BACKUP EAGLE® REST API python examples
-BACKUP EAGLE® REST API examples for python.
+# BACKUP EAGLE® REST API examples
+BACKUP EAGLE® REST API examples for PowerShell (Windows) and Python (Linux).
 
 ## About BACKUP EAGLE®
 BACKUP EAGLE® is a reporting and monitoring solution that monitors and documents your entire backup environment without any additional manual effort.
@@ -10,7 +10,7 @@ BACKUP EAGLE® supports various backup systems such as IBM Spectrum Protect, IBM
 
 The dashboard provides you with all the essential information on the status of your backup environment in a clear and concise manner. You can see at a glance whether there is still enough storage capacity, whether the backups have run reliably or whether there have been problems during a backup.
 
-For more information visit <a href="https://www.schmitz-rz-consult.de/" target="_blank">www.schmitz-rz-consult.de</a>.
+For more information visit <a href="https://www.backup-eagle.com/" target="_blank">www.backup-eagle.com</a>.
 
 ## Content
 
@@ -32,52 +32,101 @@ Here are the assignments of the individual topics to the sample folders:
 | User management                    | user_management                    |
 | XML, log & csv upload              | xml_log_csv_upload                 |
 
+Every example exists twice with the same name and the same function:
+
+- `*.ps1`: PowerShell script, use it on **Windows**
+- `*.py`: Python script, use it on **Linux**
+
+Exception: `server_devices/Set-IspDataSourcePassword.ps1` (sets the password of ISP data sources) is only available for PowerShell.
+
+The REST server has to be activated in BACKUP EAGLE® (`rest_server_active=true`, default port 10987).
+
 ## Usage
 
-### Windows
+### Windows (PowerShell)
 
 #### Requirements
 
-Install the last version of Python from here: <a href="https://www.python.org/downloads/windows/" target="_blank">www.python.org/downloads/windows/</a>.
+Windows PowerShell 5.1 (included in Windows) or PowerShell 7. No further installation is required.
+
+If the execution of scripts is blocked, allow it for the current session:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+```
+
+Scripts downloaded from the internet may additionally have to be unblocked with `Get-ChildItem -Recurse -Filter *.ps1 | Unblock-File`.
 
 #### Example usage
 
-Open a new command prompt and insert:
+Open a new PowerShell console and insert:
 
-```console
-py .\mail_management\queryMailRecipients.py --host="192.168.0.1" --user="admin" --password="admin" --pretty-print=True
+```powershell
+.\mail_management\queryMailRecipients.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -PrettyPrint
 ```
 
-### Linux
+The script prompts for the BACKUP EAGLE® user. For unattended usage pass a credential object:
+
+```powershell
+$cred = Get-Credential
+.\mail_management\queryMailRecipients.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -Credential $cred
+```
+
+JSON data can be passed as string or as PowerShell object (hashtable):
+
+```powershell
+.\server_and_device_group_management\createServerGroup.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -Group '{"name":"ISP","entries":[{"serverTypePattern":"ISP"}]}'
+.\server_and_device_group_management\createServerGroup.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -Group @{ name = 'ISP'; entries = @(@{ serverTypePattern = 'ISP' }) }
+```
+
+Get the description, all parameters and an example of a script with `Get-Help`:
+
+```powershell
+Get-Help .\mail_management\queryMailRecipients.ps1 -Full
+```
+
+Scripts that change data support `-WhatIf` (shows the request without sending it) and `-Confirm`.
+
+Mapping of the common parameters:
+
+| Python                    | PowerShell                                                      |
+| ------------------------- | --------------------------------------------------------------- |
+| `--host="192.168.0.1"`    | `-BaseUrl https://192.168.0.1:10987/api/rest` (default: localhost) |
+| `--user`, `--password`    | `-Credential` (prompted if not given)                           |
+| `--verify-ssl=True` (default: no verification) | `-VerifyCertificate` (default: no verification) |
+| `--pretty-print=True`     | `-PrettyPrint`                                                  |
+| `--group-id="2"` etc.     | `-GroupId 2` etc.                                               |
+| `--enable="true"`         | `-Enable $true`                                                 |
+| `--file="result.xml"`     | `-Path .\result.xml`                                            |
+
+Exit codes: 0 success, 1 REST call failed, 2 general error (e.g. invalid JSON), 3 upload file does not exist.
+
+### Linux (Python)
 
 #### Requirements
 
-Install the last version of Python via console:
+Install Python 3 and the `requests` module via console:
 
 ```console
 sudo apt-get update
-sudo apt-get install python3.10
+sudo apt-get install python3 python3-requests
 ```
-
-:warning: Please look for current version on <a href="https://www.python.org/downloads/" target="_blank">www.python.org/downloads/</a> and replace it in the command above
 
 #### Example usage
 
 Write in the terminal:
 
 ```console
-python .\mail_management\queryMailRecipients.py --host="192.168.0.1" --user="admin" --password="admin" --pretty-print=True
+python3 ./mail_management/queryMailRecipients.py --host="192.168.0.1" --user="admin" --password="admin" --pretty-print=True
 ```
 
 ---
 
 ## Copyright
 
-Visit <a href="https://www.schmitz-rz-consult.de/" target="_blank">www.schmitz-rz-consult.de</a> for more information.
+© BACKUP EAGLE GmbH 2026
 
-[![SRZC Logo](https://images.schmitz-rz-consult.de/github/logo_srzc.png)](https://www.schmitz-rz-consult.de/)
+Visit <a href="https://www.backup-eagle.com/" target="_blank">www.backup-eagle.com</a> for more information.
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/schmitz-rz-consult-gmbh/)
-[![Twitter](https://img.shields.io/badge/Twitter-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/backupeagle)
-[![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=Facebook&logoColor=white)](https://www.facebook.com/backupeagle/)
 [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/user/BACKUPEAGLE)
