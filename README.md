@@ -137,6 +137,24 @@ Write in the terminal:
 python3 ./mail_management/queryMailRecipients.py --host="192.168.0.1" --user="admin" --password="admin" --pretty-print=True
 ```
 
+## Postman
+
+In addition to the scripts, we provide a collection for <a href="https://www.postman.com/" target="_blank">Postman</a>, so that you can easily use and test REST API requests without writing any code. The collection contains requests for all REST API endpoints, including some that are not covered by the sample scripts (e.g. maintenance windows, license, tenant and credentials management).
+
+The files are located in the folder `postman`:
+
+| File                                          | Content                                                     |
+| --------------------------------------------- | ----------------------------------------------------------- |
+| `BACKUP_EAGLE_REST_API.postman_collection.json` | Requests for all REST API endpoints, grouped by topic     |
+| `BACKUP_EAGLE.postman_environment.json`       | Environment with the variables `baseUrl`, `username` and `password` |
+
+Usage:
+
+1. Import both files in Postman (**File > Import**).
+2. Select the environment **BACKUP EAGLE** and set `baseUrl` (e.g. `https://192.168.0.1:10987/api/rest`), `username` and `password` for your BACKUP EAGLE® server.
+3. BACKUP EAGLE® uses a self-signed certificate by default. Disable the SSL certificate verification in Postman (**Settings > General > SSL certificate verification**).
+4. Send any request of the collection.
+
 ---
 
 ## Copyright

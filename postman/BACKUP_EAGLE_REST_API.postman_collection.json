@@ -1,0 +1,3413 @@
+{
+  "info": {
+    "_postman_id": "0b1accff-45f4-45bf-8e5c-ac47553581d2",
+    "name": "BACKUP EAGLE REST API",
+    "description": "Generated from the BACKUP EAGLE REST API manual (BACKUPEAGLE_MANUALS/manuals/en/source/rest_api). All endpoints require a BACKUP EAGLE user with the 'admin' role (some also allow additional roles as documented per resource) authenticated via HTTP Basic Auth. {{baseUrl}} defaults to https://localhost:10987/api/rest. The BACKUP EAGLE Server uses a self-signed certificate by default - disable SSL certificate verification in Postman settings (Settings > General > SSL certificate verification = OFF) for localhost testing. The REST API must be activated first via the BACKUP EAGLE Admin Client (Settings > Configuration > Server > REST > REST API active?).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{username}}",
+        "type": "string"
+      },
+      {
+        "key": "password",
+        "value": "{{password}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:10987/api/rest",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Connection test",
+      "description": "Verify that the BACKUP EAGLE REST API is reachable and that the supplied Basic Auth credentials are accepted, before using any other endpoint.",
+      "item": [
+        {
+          "name": "Perform connection test",
+          "request": {
+            "method": "GET",
+            "description": "Check that the REST API endpoint is reachable and the provided Basic Auth credentials are accepted; no specific role is required.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/connection-test",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "connection-test"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Server/Devices",
+      "description": "Manage backup servers and devices (data sources) of all supported types: query the current inventory, create and update server-specific configurations (Azure, BRMS, Cohesity, CommVault, Device, Generic, ISP, ISPP, NetWorker, PowerProtect, Rubrik, SEP sesam, Veeam, Veeam365, vCenter), change stored credentials, and run or poll connection tests.",
+      "item": [
+        {
+          "name": "Query Server/Devices",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all configured backup servers and devices (data sources). Available to the admin and analyst roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "method": "PUT",
+            "description": "Update the stored password for one or more existing servers/devices, identified by type and server name.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/updateCredentials",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "updateCredentials"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"type\": \"client\",\n        \"server\": \"tsm01\",\n        \"password\": \"geheim\"\n    }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Perform connection test",
+          "request": {
+            "method": "PUT",
+            "description": "Trigger an asynchronous connection test for the data source with the given id; poll the result endpoint to retrieve the outcome.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/connectiontest/{dataSourceId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "connectiontest",
+                "{dataSourceId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query connection test result",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the result of a previously triggered connection test using its process id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/connectiontest/result/{processId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "connectiontest",
+                "result",
+                "{processId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Azure server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Azure data source with the given name, tenant, and REST credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/azure",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "azure"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testAzureServer\",\n    \"dataSourceClass\": \"Azure\",\n    \"azureTenant\": \"abcdef\",\n    \"restAddress\": \"https://management.azure.com/Subscriptions/abcdef\",\n    \"restUser\": \"abcdef\",\n    \"restPassword\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create BRMS server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new IBM BRMS data source with the given share address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/brms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "brms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testBRMSServer\",\n    \"dataSourceClass\": \"BRMS\",\n    \"address\": \"192.168.1.1\",\n    \"shareName\": \"abcdef\",\n    \"shareUser\": \"user\",\n    \"sharePassword\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Cohesity server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Cohesity data source with the given domain, REST address, and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/cohesity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "cohesity"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testCohesityServer\",\n    \"dataSourceClass\": \"Cohesity\",\n    \"domain\": \"domain\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\",\n    \"restPassword\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create CommVault server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new CommVault data source with the given REST address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/commvault",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "commvault"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testCommVaultServer\",\n    \"dataSourceClass\": \"CommVault\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\",\n    \"restPassword\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Device",
+          "request": {
+            "method": "POST",
+            "description": "Create a new device (e.g. DataDomain) with SNMP and SSH connection details.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "device"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testDataDomain\",\n    \"dataSourceClass\": \"DataDomain\",\n    \"address\": \"192.168.1.1\",\n    \"snmpVersion\": \"v2\",\n    \"snmpCommunity\": \"public\",\n    \"sshAddress\": \"192.168.1.1\",\n    \"sshAuthMethod\": \"password\",\n    \"sshUser\": \"user\",\n    \"sshPassword\": \"abcdef\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Generic server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new generic data source that can be used as a target for manually uploaded or imported backup results.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/generic",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "generic"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testServer\",\n    \"dataSourceClass\": \"Generic\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create ISP server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new IBM Spectrum Protect (ISP/TSM) server with its dsmadmc connection string and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/isp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "isp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testISPServer\",\n    \"dataSourceClass\": \"ISP\",\n    \"connectionString\": \"-tcps=192.168.1.1-tcpp=1500\",\n    \"user\": \"admin\",\n    \"password\": \"abcdef\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create ISPP server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new IBM Spectrum Protect Plus (ISPP) data source with the given REST address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/ispp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "ispp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testISPPServer\",\n    \"dataSourceClass\": \"ISPP\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\",\n    \"restPassword\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create NetWorker server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Dell NetWorker server with its address, generation, legato binary directory, and daemon log path.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/networker",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "networker"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testNetworkerServer\",\n    \"dataSourceClass\": \"NetWorker\",\n    \"address\": \"192.168.1.1\",\n    \"generation\": \"1\",\n    \"legatoBinDir\": \"/usr/sbin\",\n    \"daemonLogPath\": \"/nsr/logs/daemon.raw\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create PowerProtect server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Dell PowerProtect data source with the given REST address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/powerprotect",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "powerprotect"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testPowerProtectServer\",\n    \"dataSourceClass\": \"PowerProtect\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\",\n    \"restPassword\": \"password\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Rubrik server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Rubrik data source with the given REST address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/rubrik",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "rubrik"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testRubrikServer\",\n    \"dataSourceClass\": \"Rubrik\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"admin\",\n    \"restPassword\": \"abcdef\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create SEP sesam server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new SEP sesam data source with the given REST address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/sepsesam",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "sepsesam"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testSepSesamServer\",\n    \"dataSourceClass\": \"SEPsesam\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"admin\",\n    \"restPassword\": \"abcdef\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Veeam server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Veeam Backup & Replication data source with the given address and PowerShell binary path.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/veeam",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "veeam"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testVeeamServer\",\n    \"dataSourceClass\": \"Veeam\",\n    \"address\": \"192.168.1.1\",\n    \"powerShellBinary\": \"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Veeam365 server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Veeam Backup for Microsoft 365 data source with the given REST address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/veeam365",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "veeam365"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testVeeam365Server\",\n    \"dataSourceClass\": \"Veeam365\",\n    \"restAddress\": \"192.168.1.1:4443\",\n    \"restUser\": \"admin\",\n    \"restPassword\": \"abcdef\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create vCenter server",
+          "request": {
+            "method": "POST",
+            "description": "Create a new VMware vCenter data source with the given REST address and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/vcenter",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "vcenter"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"testVCenterServer\",\n    \"dataSourceClass\": \"vCenter\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"root\",\n    \"restPassword\": \"abcdef\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query initialization result",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the result of the asynchronous initialization that runs after creating a new server/device, using its process id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/init/result/{processId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "init",
+                "result",
+                "{processId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Azure server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing Azure data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/azure",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "azure"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"2\",\n    \"azureTenant\": \"neuerTenant\",\n    \"restAddress\": \"https://management.azure.com/Subscriptions/abcdef\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update BRMS server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing BRMS data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/brms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "brms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"34\",\n    \"address\": \"192.168.1.1\",\n    \"shareName\": \"abcdef\",\n    \"shareUser\": \"user\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cohesity server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing Cohesity data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/cohesity",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "cohesity"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"34\",\n    \"domain\": \"domain\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update CommVault server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing CommVault data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/commvault",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "commvault"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"27\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Device",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing device identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "device"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"27\",\n    \"address\": \"192.168.1.1\",\n    \"snmpVersion\": \"v2\",\n    \"snmpCommunity\": \"public\",\n    \"sshHostname\": \"192.168.1.1\",\n    \"sshAuthMethod\": \"password\",\n    \"sshUser\": \"user\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Generic server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing generic data source identified by id, e.g. to change its timezone.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/generic",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "generic"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"timezone\": \"Pacific/Port_Moresby\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update ISP server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing ISP/TSM server identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/isp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "isp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"connectionString\": \"-tcps=192.168.1.1-tcpp=1500\",\n    \"user\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update ISPP server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing ISPP data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/ispp",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "ispp"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update NetWorker server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing NetWorker server identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/networker",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "networker"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"address\": \"192.168.1.1\",\n    \"generation\": \"1\",\n    \"legatoBinDir\": \"/usr/sbin\",\n    \"daemonLogPath\": \"/nsr/logs/daemon.raw\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update PowerProtect server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing PowerProtect data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/powerprotect",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "powerprotect"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"user\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Rubrik server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing Rubrik data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/rubrik",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "rubrik"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update SEP sesam server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing SEP sesam data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/sepsesam",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "sepsesam"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Veeam server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing Veeam data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/veeam",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "veeam"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"address\": \"192.168.1.1\",\n    \"powerShellBinary\": \"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Veeam365 server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing Veeam365 data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/veeam365",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "veeam365"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"restAddress\": \"192.168.1.1:4443\",\n    \"restUser\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update vCenter server",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing vCenter data source identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/datasource/vcenter",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasource",
+                "vcenter"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"63\",\n    \"restAddress\": \"192.168.1.1\",\n    \"restUser\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Projects/Schedules",
+      "description": "Query configured backup projects/schedules (also available to the ca_admin, ca_access, and analyst roles) and activate or deactivate them (admin or ca_admin role) for specific domains, nodes, and servers.",
+      "item": [
+        {
+          "name": "Query Projects/Schedules",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all configured backup projects/schedules. Available to the admin, ca_admin, ca_access, and analyst roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/baproject/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "baproject",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Projects",
+          "request": {
+            "method": "POST",
+            "description": "Activate one or more projects/schedules matching the given domain, node, server, and project name filters. Requires the admin or ca_admin role.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/baproject/activate-baproject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "baproject",
+                "activate-baproject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"comment\": \"activate example using REST\",\n    \"domainName\": \"*\",\n    \"nodeName\": \"*\",\n    \"serverName\": \"*\",\n    \"projectName\": \"backup001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate Projects",
+          "request": {
+            "method": "POST",
+            "description": "Deactivate one or more projects/schedules matching the given domain, node, server, and project name filters. Requires the admin or ca_admin role.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/baproject/deactivate-baproject",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "baproject",
+                "deactivate-baproject"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"comment\": \"deactivate example using REST\",\n    \"domainName\": \"*\",\n    \"nodeName\": \"win-app-001\",\n    \"serverName\": \"*\",\n    \"projectName\": \"backup001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Nodes/Clients/VMs",
+      "description": "Query backup clients/nodes/VMs, optionally including deactivated ones (also available to the ca_admin, ca_access, and analyst roles); activate, deactivate, or update the custom fields of nodes (admin or ca_admin role).",
+      "item": [
+        {
+          "name": "Query Nodes/Clients/VMs",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of currently active nodes/clients/VMs. Available to the admin, ca_admin, ca_access, and analyst roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/banode/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banode",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query Nodes/Clients/VMs (all active and deactivated)",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all nodes/clients/VMs, including deactivated ones, via the all query parameter. Available to the admin, ca_admin, ca_access, and analyst roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/banode/list?all=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banode",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "all",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Nodes/Clients/VMs",
+          "request": {
+            "method": "POST",
+            "description": "Activate one or more nodes/clients/VMs matching the given domain, node, and server filters. Requires the admin or ca_admin role.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/banode/activate-banode",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banode",
+                "activate-banode"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"comment\": \"activate example using REST\",\n    \"domainName\": \"*\",\n    \"nodeName\": \"win-app-001\",\n    \"serverName\": \"*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Deactivate Nodes/Clients/VMs",
+          "request": {
+            "method": "POST",
+            "description": "Deactivate one or more nodes/clients/VMs matching the given domain, node, and server filters. Requires the admin or ca_admin role.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/banode/deactivate-banode",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banode",
+                "deactivate-banode"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"comment\": \"deactivate example using REST\",\n    \"domainName\": \"*\",\n    \"nodeName\": \"win-app-001\",\n    \"serverName\": \"*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update node custom fields",
+          "request": {
+            "method": "POST",
+            "description": "Set custom field values on nodes matching the given node name filter. Requires the admin or ca_admin role.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/banode/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banode",
+                "update"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"custom1\": \"new custom 1 field value\",\n    \"nodeNameFilter\": \"win-app-001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update node custom fields (unset filter)",
+          "request": {
+            "method": "POST",
+            "description": "Set a custom field value across all nodes by clearing the custom filter, instead of restricting the change to a specific node. Requires the admin or ca_admin role.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/banode/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banode",
+                "update"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"customFilter1\": \"\",\n    \"custom1\": \"my new value\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Backup/Restore Results",
+      "description": "Query backup and restore job results for a given time range, and drill down into the individual backed-up objects and their detail messages. Also available to the ca_admin, ca_access, and analyst roles.",
+      "item": [
+        {
+          "name": "Query backup/restore results",
+          "request": {
+            "method": "POST",
+            "description": "Retrieve backup/restore job results within the given start and end time range. Available to the admin, ca_admin, ca_access, and analyst roles.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/baresult/get",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "baresult",
+                "get"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"startTime\": \"2019-04-28T00:00:00\",\n    \"endTime\": \"2019-04-29T00:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query backup/restore objects",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the individual backed-up objects belonging to a specific backup/restore result, identified by baResultId. Available to the admin, ca_admin, ca_access, and analyst roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/baobject/get?baResultId=123456789",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "baobject",
+                "get"
+              ],
+              "query": [
+                {
+                  "key": "baResultId",
+                  "value": "123456789"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query backup/restore messages",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the detail messages logged for a specific backed-up object within a backup/restore result. Available to the admin, ca_admin, ca_access, and analyst roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/baobjectdetails/get?baResultId=123456789&baObjectId=223344556",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "baobjectdetails",
+                "get"
+              ],
+              "query": [
+                {
+                  "key": "baResultId",
+                  "value": "123456789"
+                },
+                {
+                  "key": "baObjectId",
+                  "value": "223344556"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Mail Management",
+      "description": "Manage mail recipients, recipient groups, and newsgroups used for distributing BACKUP EAGLE reports and notifications by email.",
+      "item": [
+        {
+          "name": "Query mail recipients",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of configured mail recipients.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipients/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipients",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create mail recipient",
+          "request": {
+            "method": "POST",
+            "description": "Create a new mail recipient with the given name and email address.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipients/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipients",
+                "add"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"new-mail-recipient-name\",\n    \"mail\": \"new-mail-address\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update mail recipients",
+          "request": {
+            "method": "POST",
+            "description": "Update an existing mail recipient identified by id.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipients/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipients",
+                "update"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"2\",\n    \"name\": \"new-mail-recipient-name\",\n    \"mail\": \"new-mail-address\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete mail recipients",
+          "request": {
+            "method": "GET",
+            "description": "Permanently delete the mail recipient with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipients/delete?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipients",
+                "delete"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query recipient groups",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of configured mail recipient groups.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipientgroups/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipientgroups",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create recipient groups",
+          "request": {
+            "method": "POST",
+            "description": "Create a new recipient group containing the given list of mail recipient ids.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipientgroups/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipientgroups",
+                "add"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"new-recipient-group-name\",\n    \"recipients\": [\n        {\n            \"id\": \"10\"\n        },\n        {\n            \"id\": \"11\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update recipient group",
+          "request": {
+            "method": "POST",
+            "description": "Update an existing recipient group identified by id, e.g. its name or member recipient ids.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipientgroups/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipientgroups",
+                "update"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"2\",\n    \"name\": \"new-mail-recipient-name\",\n    \"recipients\": [\n        {\n            \"id\": \"10\"\n        },\n        {\n            \"id\": \"12\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete recipient group",
+          "request": {
+            "method": "GET",
+            "description": "Permanently delete the recipient group with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mailrecipientgroups/delete?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mailrecipientgroups",
+                "delete"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query all Newsgroups",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all configured newsgroups.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mail/newsgroup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mail",
+                "newsgroup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query Newsgroup with id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single newsgroup by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mail/newsgroup/{newsgroupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mail",
+                "newsgroup",
+                "{newsgroupId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create new Newsgroup",
+          "request": {
+            "method": "POST",
+            "description": "Create a new newsgroup that mails matching reports (selected by file name pattern) to the given recipients and/or recipient groups within an active time window.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mail/newsgroup",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mail",
+                "newsgroup"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"All PDFs\",\n    \"pattern\": \"*.pdf\",\n    \"subject\": \"BACKUP EAGLE Reports\",\n    \"text\": \"BACKUP EAGLE Reports\",\n    \"activeFrom\": \"08:00\",\n    \"activeTo\": \"18:00\",\n    \"mergeMails\": true,\n    \"recipientIds\": [\n        12\n    ],\n    \"recipientGroupIds\": [\n        1\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Newsgroup",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing newsgroup identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/mail/newsgroup/{newsgroupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mail",
+                "newsgroup",
+                "{newsgroupId}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"pattern\": \"*.pdf\",\n    \"subject\": \"BACKUP EAGLE PDF Reports\",\n    \"activeFrom\": \"08:00\",\n    \"activeTo\": \"18:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Newsgroup",
+          "request": {
+            "method": "DELETE",
+            "description": "Permanently delete the newsgroup with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/mail/newsgroup/{newsgroupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "mail",
+                "newsgroup",
+                "{newsgroupId}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Defined Group Management",
+      "description": "Create, update, delete, and list user-defined groups (UDGs) that combine servers and nodes by filter criteria for grouping and reporting.",
+      "item": [
+        {
+          "name": "Query user-defined groups",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of configured user-defined groups.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/udgs/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "udgs",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create user-defined groups",
+          "request": {
+            "method": "POST",
+            "description": "Create a new user-defined group with the given name, address list, and filter elements matching servers/nodes.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/udgs/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "udgs",
+                "add"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"UDG-1\",\n    \"addressList\": {\n        \"id\": \"10\"\n    },\n    \"elements\": [\n        {\n            \"baServerName\": \"server-name\",\n            \"baNodeGroupName\": \"node-group-name\",\n            \"baNodeOS\": \"os\",\n            \"baNodeContact\": \"contact\",\n            \"baNodeActive\": \"true\",\n            \"baServerActive\": \"true\",\n            \"exclude\": \"false\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user-defined group",
+          "request": {
+            "method": "POST",
+            "description": "Update an existing user-defined group identified by id.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/udgs/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "udgs",
+                "update"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"23\",\n    \"name\": \"UDG-1\",\n    \"addressList\": {\n        \"id\": \"10\"\n    },\n    \"elements\": [\n        {\n            \"baServerName\": \"server-name\",\n            \"baNodeGroupName\": \"node-group-name\",\n            \"baNodeOS\": \"os\",\n            \"baNodeContact\": \"contact\",\n            \"baNodeActive\": \"true\",\n            \"baServerActive\": \"true\",\n            \"exclude\": \"false\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user-defined group",
+          "request": {
+            "method": "GET",
+            "description": "Permanently delete the user-defined group with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/udgs/delete?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "udgs",
+                "delete"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Report Management",
+      "description": "Query configured reports, execute them on demand for a given time range and export format, copy a report to a user-defined group, and delete reports. Available to the admin and report_admin roles.",
+      "item": [
+        {
+          "name": "Query reports",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of configured reports. Available to the admin and report_admin roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create reports (copy to UDG)",
+          "request": {
+            "method": "POST",
+            "description": "Copy an existing report to a target user-defined group, optionally enabling scheduled mailing for the copy. Available to the admin and report_admin roles.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/copyToUdg",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "copyToUdg"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"25_34\",\n    \"toUdg\": \"10\",\n    \"activeMailing\": \"false\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Execute report",
+          "request": {
+            "method": "POST",
+            "description": "Execute a report on demand for the given time range and export format (e.g. PDF) and return the generated file. Available to the admin and report_admin roles.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/execute",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "execute"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reportId\": 83,\n    \"exportFormat\": \"PDF\",\n    \"startTime\": \"2025-12-01 10:00:00\",\n    \"endTime\": \"2025-12-08 10:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete report",
+          "request": {
+            "method": "GET",
+            "description": "Permanently delete the report with the given id. Available to the admin and report_admin roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reports/delete?id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "delete"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Execute report (extended export formats)",
+          "request": {
+            "method": "POST",
+            "description": "Execute a report on demand using an extended export format (e.g. CSV) for the given time range. Available to the admin and report_admin roles.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reports/execute",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reports",
+                "execute"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"reportId\": 25,\n    \"exportFormat\": \"CSV\",\n    \"startTime\": \"2024-09-01 00:00:00\",\n    \"endTime\": \"2024-09-30 23:59:59\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "XML/log file/CSV upload",
+      "description": "Upload XML, log, or CSV files generically into BACKUP EAGLE for collector processing, optionally assigning them to a specific data source and subdirectory. Unlike most other endpoints, no specific role is required beyond a valid BACKUP EAGLE login.",
+      "item": [
+        {
+          "name": "Upload XML/log/CSV file",
+          "request": {
+            "method": "POST",
+            "description": "Upload an XML, log, or CSV file for generic collector processing, optionally specifying the target data source name and a subdirectory as (disabled by default) form fields. No specific role is required beyond a valid BACKUP EAGLE login.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/upload/default",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "upload",
+                "default"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "datasourcename",
+                  "value": "generic-01",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "subdir",
+                  "value": "dir_01",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Server- and Device Group Management",
+      "description": "Manage server groups and device groups used to bundle backup servers or devices by pattern-based criteria such as type and version.",
+      "item": [
+        {
+          "name": "Query all server groups",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all server groups.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/group/server",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "server"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query server group with id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single server group by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/group/server/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "server",
+                "{groupId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a server group",
+          "request": {
+            "method": "POST",
+            "description": "Create a new server group with entries matching servers by pattern criteria such as server type.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/group/server",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "server"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ISP\",\n    \"entries\": [\n        {\n            \"serverTypePattern\": \"ISP\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update server group",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing server group identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/group/server/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "server",
+                "{groupId}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ISP\",\n    \"entries\": [\n        {\n            \"serverTypePattern\": \"ISP\",\n            \"versionPattern\": \"8.1*\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete server group",
+          "request": {
+            "method": "DELETE",
+            "description": "Permanently delete the server group with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/group/server/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "server",
+                "{groupId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query all device groups",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all device groups.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/group/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "device"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query device group with id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single device group by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/group/device/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "device",
+                "{groupId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a device group",
+          "request": {
+            "method": "POST",
+            "description": "Create a new device group with entries matching devices by pattern criteria such as device type.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/group/device",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "device"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ISP\",\n    \"entries\": [\n        {\n            \"deviceTypePattern\": \"Device\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update device group",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing device group identified by id; fields omitted from the request body are left unchanged.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/group/device/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "device",
+                "{groupId}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ISP\",\n    \"entries\": [\n        {\n            \"dataSourceClassPattern\": \"*\",\n            \"versionPattern\": \"8.1*\"\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete device group",
+          "request": {
+            "method": "DELETE",
+            "description": "Permanently delete the device group with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/group/device/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "group",
+                "device",
+                "{groupId}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "description": "Manage BACKUP EAGLE users, roles, and user groups, including role assignment, group membership, and password changes.",
+      "item": [
+        {
+          "name": "Query all users",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all configured users.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/user",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query user by id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single user by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/user/{userId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "user",
+                "{userId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing user identified by id, e.g. to change its assigned role ids.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/security/user/{userId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "user",
+                "{userId}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"roleIds\": [\n        1,\n        2\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query all roles",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all configured roles.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "role"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query role by id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single role by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/role/{roleId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "role",
+                "{roleId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a role",
+          "request": {
+            "method": "POST",
+            "description": "Assign a role to a user-defined group by creating a new role entry linking a role id and a user-defined group id.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/security/role",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "role"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"roleId\": 22,\n    \"userDefGroupId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete role",
+          "request": {
+            "method": "DELETE",
+            "description": "Permanently delete the role with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/role/{roleId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "role",
+                "{roleId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query all user groups",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all user groups.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/group",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "group"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query user group by id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single user group by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/group/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "group",
+                "{groupId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a user group",
+          "request": {
+            "method": "POST",
+            "description": "Create a new user group with the given name, description, and directory alias (e.g. for LDAP/AD mapping).",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/security/group",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "group"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Admins\",\n    \"description\": \"Administratoren\",\n    \"directoryAlias\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update user group",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing user group identified by id, e.g. its role assignments.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/security/group/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "group",
+                "{groupId}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Admins\",\n    \"description\": \"Administratoren\",\n    \"directoryAlias\": \"admin\",\n    \"roleIds\": [\n        1,\n        2\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete user group",
+          "request": {
+            "method": "DELETE",
+            "description": "Permanently delete the user group with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/security/group/{groupId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "group",
+                "{groupId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update a user's password",
+          "request": {
+            "method": "PUT",
+            "description": "Set a new password for the user with the given id.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/security/user/{userId}/password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "security",
+                "user",
+                "{userId}",
+                "password"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"password\": \"MyNewPassword\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "RMAN Catalog Management",
+      "description": "Manage Oracle RMAN catalog configurations: list, create, update, test connectivity, activate/deactivate, and delete them.",
+      "item": [
+        {
+          "name": "Query all RMAN Catalog Configs",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all configured Oracle RMAN catalog connections.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/config/rman",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "rman"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query RMAN Catalog Config with id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single RMAN catalog configuration by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/config/rman/{rmanId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "rman",
+                "{rmanId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Connection Test RMAN Catalog with id",
+          "request": {
+            "method": "GET",
+            "description": "Test the database connection for the RMAN catalog configuration with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/config/rman/{rmanId}/connectiontest",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "rman",
+                "{rmanId}",
+                "connectiontest"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create new RMAN Catalog Config",
+          "request": {
+            "method": "POST",
+            "description": "Create a new Oracle RMAN catalog configuration with the given JDBC connection string and credentials.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/config/rman",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "rman"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"user\",\n    \"password\": \"password\",\n    \"connectionString\": \"jdbc:oracle:thin:@192.168.111.100:1521:orcl\",\n    \"active\": true,\n    \"credentialsRequired\": true,\n    \"scheme\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update RMAN Catalog Config",
+          "request": {
+            "method": "PUT",
+            "description": "Update an existing RMAN catalog configuration identified by id.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/config/rman/{rmanId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "rman",
+                "{rmanId}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"user\",\n    \"password\": \"password\",\n    \"connectionString\": \"jdbc:oracle:thin:@192.168.111.100:1521:orcl\",\n    \"active\": true,\n    \"credentialsRequired\": true,\n    \"scheme\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "De-/activate a RMAN catalog configuration",
+          "request": {
+            "method": "PUT",
+            "description": "Activate or deactivate the RMAN catalog configuration with the given id via the active query parameter.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/config/rman/{rmanId}?active=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "rman",
+                "{rmanId}"
+              ],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete RMAN Catalog Config",
+          "request": {
+            "method": "DELETE",
+            "description": "Permanently delete the RMAN catalog configuration with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/config/rman/{rmanId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "rman",
+                "{rmanId}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Import Backup Results",
+      "description": "Import generic backup/restore result data, including per-object messages, into BACKUP EAGLE from external sources. Available to the admin and cc_admin roles.",
+      "item": [
+        {
+          "name": "Import Backup/Restoreresults",
+          "request": {
+            "method": "POST",
+            "description": "Import a generic backup/restore result, including its backed-up objects and messages, into BACKUP EAGLE for a given project, node, and server. Requires the admin or cc_admin role.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/genericbackup/import-baresult",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "genericbackup",
+                "import-baresult"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"projectName\": \"testschedule\",\n    \"baNode\": \"testnode\",\n    \"baServer\": \"servername wie in BACKUP EAGLE angegeben\",\n    \"baNodeGroup\": \"domain\",\n    \"objectName\": \"zu sicherndes objekt\",\n    \"startTime\": 1645605007000,\n    \"endTime\": 1645606008000,\n    \"rc\": 8,\n    \"schedStatus\": \"status\",\n    \"schedResult\": 8,\n    \"schedStartTime\": 1,\n    \"bytes\": 1024,\n    \"savesetLevel\": 22,\n    \"bottleneck\": \"bottleneck\",\n    \"bytesInspected\": 1,\n    \"transferRate\": 1,\n    \"compression\": 1.0,\n    \"readSize\": 1,\n    \"pool\": \"pool\",\n    \"objectsInspected\": 1,\n    \"objectsAssigned\": 1,\n    \"objectsBackedUp\": 1,\n    \"objectsUpdated\": 1,\n    \"objectsRebound\": 1,\n    \"objectsDeleted\": 1,\n    \"objectsExpired\": 1,\n    \"objectsFailed\": 1,\n    \"subfileObjects\": 1,\n    \"reductionRatio\": 1.0,\n    \"processingTime\": 1,\n    \"action\": \"action\",\n    \"transferredSize\": 1,\n    \"backupState\": \"state\",\n    \"backupType\": \"backuptype\",\n    \"objectType\": \"objecttype\",\n    \"dedupFactor\": 1.0,\n    \"storagePolicy\": \"policy\",\n    \"baObjects\": [\n        {\n            \"value\": \"diese Message ist eine Info Message und kein Fehler\",\n            \"type\": 0\n        },\n        {\n            \"value\": \"diese Message ist eine FehlerMeldung\",\n            \"type\": 8\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Maintenance Windows",
+      "description": "List, add, and delete maintenance windows that suppress alerting for servers, devices, or nodes during planned downtime. Available to the admin role, or to the matching ca_admin_maintmode_mgr* role for the affected maintenance window type (node, server, or device).",
+      "item": [
+        {
+          "name": "List maintenance windows",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve maintenance windows; the all query parameter includes past/expired windows in addition to current and upcoming ones. Available to the admin role or the matching ca_admin_maintmode_mgr* role for the maintenance window type.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/maintenance?all=true",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "maintenance"
+              ],
+              "query": [
+                {
+                  "key": "all",
+                  "value": "true"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add maintenance windows",
+          "request": {
+            "method": "POST",
+            "description": "Create a new maintenance window for a server, device, or node covering the given start and end time. Available to the admin role or the matching ca_admin_maintmode_mgr* role for the maintenance window type.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/maintenance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "maintenance"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"server\",\n    \"dataSource\": \"maintenance-test\",\n    \"lastUpdateBy\": \"srzc\",\n    \"start\": 1666666666000,\n    \"end\": 1666866666000,\n    \"comment\": \"sent by rest\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete maintenance windows",
+          "request": {
+            "method": "DELETE",
+            "description": "Permanently delete the maintenance window with the given id and type. Available to the admin role or the matching ca_admin_maintmode_mgr* role for the maintenance window type.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/maintenance?id=125&type=server",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "maintenance"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "125"
+                },
+                {
+                  "key": "type",
+                  "value": "server"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Server/Device classes",
+      "description": "Query the list of server and device classes (types) supported by BACKUP EAGLE.",
+      "item": [
+        {
+          "name": "Query all server/device classes",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all server and device classes (types) supported by BACKUP EAGLE.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/datasourceclass",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "datasourceclass"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "License Management",
+      "description": "Upload new license files (replacing the entire current license set) and query the currently installed licenses.",
+      "item": [
+        {
+          "name": "Upload licenses",
+          "request": {
+            "method": "POST",
+            "description": "Upload a new license file; this replaces the entire current set of installed licenses rather than merging with it.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/config/license",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "license"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query licenses",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of currently installed licenses.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/config/license",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "config",
+                "license"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tenant Management",
+      "description": "Manage multi-tenant configuration: import tenant configuration files, update the remote host used for tenant communication, and query tenants and their connection status.",
+      "item": [
+        {
+          "name": "Import tenant configuration",
+          "request": {
+            "method": "POST",
+            "description": "Import a tenant configuration file to set up or update a tenant.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tenant/import",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenant",
+                "import"
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update remote host configuration",
+          "request": {
+            "method": "POST",
+            "description": "Update the remote host and port used for tenant communication.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/tenant/host",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenant",
+                "host"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"remoteHost\": \"backup-server.example.com\",\n    \"remotePort\": 22\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query all tenants",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all configured tenants.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tenant",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenant"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Query tenant with id",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve a single tenant by its id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tenant/{tenantId}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenant",
+                "{tenantId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Test tenant connection",
+          "request": {
+            "method": "GET",
+            "description": "Test the connection to the tenant with the given id.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/tenant/{tenantId}/connection-test",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "tenant",
+                "{tenantId}",
+                "connection-test"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Credentials Management",
+      "description": "Manage centrally stored credentials (e.g. username/password) that can be referenced by servers, devices, and other configurations: list, create, update, and delete them.",
+      "item": [
+        {
+          "name": "Query credentials",
+          "request": {
+            "method": "GET",
+            "description": "Retrieve the list of all stored credentials; secret fields such as password or token are never included in the response.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/credentials/list",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "credentials",
+                "list"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create credentials",
+          "request": {
+            "method": "POST",
+            "description": "Create a new credentials entry with the given name, type (e.g. USER_PASSWORD), user, and secret; the id is always generated by the server and a new entry can never be created as built-in.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/credentials/add",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "credentials",
+                "add"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"ISP Test User\",\n    \"type\": \"USER_PASSWORD\",\n    \"user\": \"ispuser\",\n    \"secret\": \"ispsecret\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update credentials",
+          "request": {
+            "method": "POST",
+            "description": "Update an existing credentials entry identified by id; fields omitted from the request body are left unchanged, including the secret if not provided, and the credentials type cannot be changed.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/credentials/update",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "credentials",
+                "update"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": \"a1b2c3d4-...\",\n    \"name\": \"new-credentials-name\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete credentials",
+          "request": {
+            "method": "GET",
+            "description": "Permanently delete the credentials entry with the given id; credentials marked as built-in (delivered with the application, e.g. \"ISP Planfile Server Query\") cannot be deleted.",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/credentials/delete?id=a1b2c3d4-...",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "credentials",
+                "delete"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "a1b2c3d4-..."
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
