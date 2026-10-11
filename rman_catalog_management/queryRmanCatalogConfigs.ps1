@@ -14,8 +14,18 @@
 .PARAMETER BaseUrl
     Base URL of the REST API. Default: https://localhost:10987/api/rest
 
+.PARAMETER User
+    BACKUP EAGLE user for the REST API. Prompted if neither -User nor -Credential is given.
+
+.PARAMETER Password
+    Password of the BACKUP EAGLE user (plain text). Prompted if not given.
+    Use -Credential to avoid the password in plain text.
+
 .PARAMETER Credential
-    BACKUP EAGLE user for the REST API. Prompted if not given.
+    BACKUP EAGLE user and password as PSCredential. Alternative to -User/-Password, both cannot be combined.
+
+.PARAMETER TimeoutSec
+    Timeout of the REST call in seconds. Default: 60
 
 .PARAMETER VerifyCertificate
     Validate the server certificate. By default the certificate is not validated, because BACKUP EAGLE
@@ -25,19 +35,28 @@
     Pretty printing of the JSON response.
 
 .EXAMPLE
-    .\queryRmanCatalogConfigs.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -PrettyPrint
+    .\queryRmanCatalogConfigs.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -User admin -Password admin -PrettyPrint
 
 .NOTES
     Exit code 0: success, 1: REST call failed, 2: general error.
     Works with Windows PowerShell 5.1 and PowerShell 7.
 #>
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'UserPassword')]
 param(
     [string] $CatalogId,
 
     [string] $BaseUrl = 'https://localhost:10987/api/rest',
 
+    [Parameter(ParameterSetName = 'UserPassword')]
+    [string] $User,
+
+    [Parameter(ParameterSetName = 'UserPassword')]
+    [string] $Password,
+
+    [Parameter(ParameterSetName = 'Credential', Mandatory = $true)]
     [System.Management.Automation.PSCredential] $Credential,
+
+    [int] $TimeoutSec = 60,
 
     [switch] $VerifyCertificate,
 
@@ -81,6 +100,7 @@ function Invoke-BeRest([string] $Method, [string] $Resource, [byte[]] $Body, [st
         Method          = $Method
         Headers         = $script:headers
         UseBasicParsing = $true
+        TimeoutSec      = $TimeoutSec
     }
     if ($null -ne $Body) {
         $params.Body = $Body
@@ -119,17 +139,28 @@ public class TrustAllCertsPolicy : ICertificatePolicy {
         }
     }
 
-    if (-not $Credential) {
-        $Credential = Get-Credential -Message 'BACKUP EAGLE user for the REST API'
+    # --- authentication (console prompt for missing values, no GUI dialog) ---
+    if ($PSCmdlet.ParameterSetName -eq 'Credential') {
+        $User = $Credential.UserName
+        $Password = $Credential.GetNetworkCredential().Password
+    } else {
+        if (-not $User) {
+            $User = Read-Host -Prompt 'BACKUP EAGLE user'
+        }
+        if (-not $Password) {
+            $securePassword = Read-Host -AsSecureString -Prompt 'BACKUP EAGLE password'
+            $Password = (New-Object System.Management.Automation.PSCredential('user', $securePassword)).GetNetworkCredential().Password
+        }
     }
 
     # Basic auth on every request (the REST API has no login/session)
-    $userPass = $Credential.UserName + ':' + $Credential.GetNetworkCredential().Password
+    $userPass = $User + ':' + $Password
     $script:headers = @{
         Authorization = 'Basic ' + [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($userPass))
         Accept        = 'application/json'
     }
 
+    Write-Host ("Connecting to {0} ..." -f $BaseUrl)
     try {
         $content = Invoke-BeRest -Method Get -Resource $resource
     } catch {

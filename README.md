@@ -37,7 +37,7 @@ Every example exists twice with the same name and the same function:
 - `*.ps1`: PowerShell script, use it on **Windows**
 - `*.py`: Python script, use it on **Linux**
 
-Exception: `server_devices/Set-IspDataSourcePassword.ps1` (sets the password of ISP data sources) is only available for PowerShell.
+`server_devices/updateDatasourceCredentials.*` sets a password (client, https, ssh, smb, token or SNMPv3) of all data sources matching a name pattern.
 
 The REST server has to be activated in BACKUP EAGLE® (`rest_server_active=true`, default port 10987).
 
@@ -62,10 +62,10 @@ Scripts downloaded from the internet may additionally have to be unblocked with 
 Open a new PowerShell console and insert:
 
 ```powershell
-.\mail_management\queryMailRecipients.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -PrettyPrint
+.\mail_management\queryMailRecipients.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -User admin -Password admin -PrettyPrint
 ```
 
-The script prompts for the BACKUP EAGLE® user. For unattended usage pass a credential object:
+If `-User` or `-Password` is missing, the script prompts for it in the console. Instead of `-User`/`-Password` a credential object can be passed (both cannot be combined):
 
 ```powershell
 $cred = Get-Credential
@@ -75,8 +75,8 @@ $cred = Get-Credential
 JSON data can be passed as string or as PowerShell object (hashtable):
 
 ```powershell
-.\server_and_device_group_management\createServerGroup.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -Group '{"name":"ISP","entries":[{"serverTypePattern":"ISP"}]}'
-.\server_and_device_group_management\createServerGroup.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -Group @{ name = 'ISP'; entries = @(@{ serverTypePattern = 'ISP' }) }
+.\server_and_device_group_management\createServerGroup.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -User admin -Password admin -Group '{"name":"ISP","entries":[{"serverTypePattern":"ISP"}]}'
+.\server_and_device_group_management\createServerGroup.ps1 -BaseUrl https://192.168.0.1:10987/api/rest -User admin -Password admin -Group @{ name = 'ISP'; entries = @(@{ serverTypePattern = 'ISP' }) }
 ```
 
 Get the description, all parameters and an example of a script with `Get-Help`:
@@ -92,7 +92,8 @@ Mapping of the common parameters:
 | Python                    | PowerShell                                                      |
 | ------------------------- | --------------------------------------------------------------- |
 | `--host="192.168.0.1"`    | `-BaseUrl https://192.168.0.1:10987/api/rest` (default: localhost) |
-| `--user`, `--password`    | `-Credential` (prompted if not given)                           |
+| `--user`, `--password`    | `-User`, `-Password` or `-Credential` (prompted if not given)   |
+| -                         | `-TimeoutSec 60` (timeout of the REST call, default: 60 seconds) |
 | `--verify-ssl=True` (default: no verification) | `-VerifyCertificate` (default: no verification) |
 | `--pretty-print=True`     | `-PrettyPrint`                                                  |
 | `--group-id="2"` etc.     | `-GroupId 2` etc.                                               |
