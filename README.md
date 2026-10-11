@@ -1,20 +1,43 @@
-[![BACKUP EAGLE Logo](https://images.schmitz-rz-consult.de/github/logo_backupeagle.png)](https://www.backup-eagle.com/)
-
 # BACKUP EAGLE® REST API examples
-BACKUP EAGLE® REST API examples for PowerShell (Windows) and Python (Linux).
+
+BACKUP EAGLE® can be automated and queried via its REST API. This allows you to integrate BACKUP EAGLE® into your own tools and workflows, for example to retrieve backup and restore results, manage users, groups and reports, or import backup results from other sources.
+
+To make getting started as easy as possible, this repository provides sample scripts for the various REST API endpoints, each available for PowerShell (Windows) and Python (Linux).
 
 ## About BACKUP EAGLE®
-BACKUP EAGLE® is a reporting and monitoring solution that monitors and documents your entire backup environment without any additional manual effort.
 
-BACKUP EAGLE® supports various backup systems such as IBM Spectrum Protect, IBM Spectrum Protect Plus, Veeam, DELL EMC NetWorker, IBM BRMS, Microsoft Azure Backup, SEP sesam, Rubrik, dsmISI MAGS, dsmISI Storage, dsmISI Veeam, Oracle RMAN, UC4 / CA Automatic Workload, BMC Control-M, DELL EMC Data Domain, IBM Tape Library, DELL EMC Isilon, DELL EMC PowerProtect Data Manager, Commvault, Cohesity, VMware vCenter and others.
+BACKUP EAGLE® is a vendor-agnostic backup monitoring, reporting, audit and compliance solution for on-premises and cloud environments. It monitors and documents your entire backup environment without any additional manual effort and automatically provides the evidence required for audits and regulations such as NIS-2 and DORA.
 
-The dashboard provides you with all the essential information on the status of your backup environment in a clear and concise manner. You can see at a glance whether there is still enough storage capacity, whether the backups have run reliably or whether there have been problems during a backup.
+BACKUP EAGLE® is available in two editions: BACKUP EAGLE® Enterprise (local installation) and BACKUP EAGLE® Cloud (hosted in Germany, designed for managed service providers).
 
-For more information visit <a href="https://www.backup-eagle.com/" target="_blank">www.backup-eagle.com</a>.
+Supported backup software:
 
-## Content
+- Acronis Cyber Protect Cloud, Arcserve ShadowProtect SPX, Arctera/Veritas Backup Exec, AvePoint, Cohesity, Commvault, Commvault Metallic, Datto SaaS Protection, Dell EMC Avamar, Dell EMC NetWorker, Dell EMC PowerProtect Data Manager, ELOVADE BackupAssist, General Storage MAGS and Cluster Controller, IBM BRMS, IBM Storage Defender, IBM Storage Protect, IBM Storage Protect Plus, IBM Storage Protect Online Services, m.ax.it Max Backup, Microsoft Azure Backup, N2W, N-able MaxBackup, OpenText MailStore, Oracle RMAN (incl. RMAN catalog), Proxmox Backup Server, Rubrik, SEP sesam, Synology Active Backup, Synology Hyper Backup, Veeam Backup & Replication, Veeam Backup Enterprise Manager, Veeam Backup for Google Cloud, Veeam Backup for Microsoft Azure, Veeam Backup for Microsoft 365, Veeam ONE, Veeam Service Provider Console, Veritas NetBackup, Wortmann TERRA CLOUD Backup
+- Cloud platforms: Amazon Web Services, Oracle Cloud Infrastructure
+- Custom backup results interface for any other backup tool
 
-Here are the assignments of the individual topics to the sample folders:
+Supported storage devices:
+
+- Dell EMC Data Domain, Dell EMC ECS, IBM Tape Libraries (33xx, 35xx, 43xx, 45xx), NetApp, Spectra Logic, Synology
+
+Additional integrations:
+
+- Hyper-V, Proxmox VE, VMware vCenter, Datto PSA
+
+The dashboard provides all essential information on the status of your backup environment at a glance: whether there is still enough storage capacity, whether all backups have run reliably and whether there have been any problems.
+
+For more information visit [www.backup-eagle.com](https://www.backup-eagle.com/).
+
+## Overview
+
+Every example exists twice with the same name and the same function:
+
+- `*.ps1`: PowerShell script, use it on **Windows**
+- `*.py`: Python script, use it on **Linux**
+
+The REST server is deactivated by default. Activate it in BACKUP EAGLE® under **Configuration > Settings > REST > Rest server active** (default port 10987). The change requires a restart of the BACKUP EAGLE® server service.
+
+The examples are divided into topics. Each topic has its own folder:
 
 | Topic                              | Folder                             |
 | ---------------------------------- | ---------------------------------- |
@@ -32,14 +55,7 @@ Here are the assignments of the individual topics to the sample folders:
 | User management                    | user_management                    |
 | XML, log & csv upload              | xml_log_csv_upload                 |
 
-Every example exists twice with the same name and the same function:
-
-- `*.ps1`: PowerShell script, use it on **Windows**
-- `*.py`: Python script, use it on **Linux**
-
 `server_devices/updateDatasourceCredentials.*` sets a password (client, https, ssh, smb, token or SNMPv3) of all data sources matching a name pattern.
-
-The REST server has to be activated in BACKUP EAGLE® (`rest_server_active=true`, default port 10987).
 
 ## Usage
 
@@ -129,5 +145,5 @@ python3 ./mail_management/queryMailRecipients.py --host="192.168.0.1" --user="ad
 
 Visit <a href="https://www.backup-eagle.com/" target="_blank">www.backup-eagle.com</a> for more information.
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/schmitz-rz-consult-gmbh/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://de.linkedin.com/company/backup-eagle)
 [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/user/BACKUPEAGLE)
