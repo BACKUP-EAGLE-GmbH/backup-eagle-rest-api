@@ -20,7 +20,8 @@
     Data sources that do not support the password type are reported as FAILED by the server.
 
     Requirements:
-    - REST server activated in BACKUP EAGLE (rest_server_active=true, default port 10987).
+    - REST server activated in BACKUP EAGLE under Configuration > Settings > REST > Rest server active
+      (default port 10987). It is deactivated by default, the change requires a restart of the BACKUP EAGLE server service.
     - BACKUP EAGLE user with role admin.
     - Only ACTIVE data sources are returned by the REST API, inactive ones are not changed.
 

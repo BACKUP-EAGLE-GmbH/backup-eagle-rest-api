@@ -6,7 +6,8 @@
     GET /api/rest/config/rman/<ConfigId>/connectiontest
 
     PowerShell counterpart of connectionTestRman.py.
-    Requirement: REST server activated in BACKUP EAGLE (rest_server_active=true, default port 10987).
+    Requirement: REST server activated in BACKUP EAGLE under Configuration > Settings > REST > Rest server active
+    (default port 10987). It is deactivated by default, the change requires a restart of the BACKUP EAGLE server service.
 
 .PARAMETER ConfigId
     Id of the RMAN catalog config.

@@ -6,7 +6,8 @@
     PUT /api/rest/group/device/<GroupId>
 
     PowerShell counterpart of updateDeviceGroup.py.
-    Requirement: REST server activated in BACKUP EAGLE (rest_server_active=true, default port 10987).
+    Requirement: REST server activated in BACKUP EAGLE under Configuration > Settings > REST > Rest server active
+    (default port 10987). It is deactivated by default, the change requires a restart of the BACKUP EAGLE server service.
 
     Supports -WhatIf (shows the request without sending it) and -Confirm.
 

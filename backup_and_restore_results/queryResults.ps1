@@ -6,7 +6,8 @@
     POST /api/rest/baresult/get
 
     PowerShell counterpart of queryResults.py.
-    Requirement: REST server activated in BACKUP EAGLE (rest_server_active=true, default port 10987).
+    Requirement: REST server activated in BACKUP EAGLE under Configuration > Settings > REST > Rest server active
+    (default port 10987). It is deactivated by default, the change requires a restart of the BACKUP EAGLE server service.
 
 .PARAMETER ResultOptions
     startTime (required), endTime (required), domainName, nodeName, serverName, udgId and queryType.
