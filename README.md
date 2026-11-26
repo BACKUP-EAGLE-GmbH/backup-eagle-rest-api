@@ -57,6 +57,8 @@ The examples are divided into topics. Each topic has its own folder:
 
 `server_devices/updateDatasourceCredentials.*` sets a password (client, https, ssh, smb, token or SNMPv3) of all data sources matching a name pattern.
 
+`user_defined_group_management/importNodesToUserDefinedGroup.ps1` imports node names from a file (one node per line) into a user defined group. The group is created or its entries are replaced, only the node name is filled (as `*<node>*` by default), all other columns are `*`.
+
 ## Usage
 
 ### Windows (PowerShell)
