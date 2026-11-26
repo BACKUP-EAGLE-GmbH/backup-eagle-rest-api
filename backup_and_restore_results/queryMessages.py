@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Query backup/restore messages for a backup/restore object
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python queryMessages.py --host="192.168.0.1" --user="admin" --password="admin" --pretty-print=True --ba-result-id="57091" --ba-object-id="101846"

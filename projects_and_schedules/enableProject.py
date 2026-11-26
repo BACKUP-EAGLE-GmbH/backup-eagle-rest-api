@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Enables the activation of projects
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python enableProject.py --host="192.168.0.1" --user="admin" --password="admin" --enable="true" --project='{\"comment\":\"comment\",\"domainName\":\"domain-name\",\"nodeName\":\"node-name\",\"serverName\":\"server-name\",\"projectName\":\"project-name\"}'

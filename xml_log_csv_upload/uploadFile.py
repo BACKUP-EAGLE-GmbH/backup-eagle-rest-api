@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Upload a XML, log or csv file
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python uploadFile.py --host="192.168.0.1" --user="admin" --password="admin" --file="backup_result.xml"

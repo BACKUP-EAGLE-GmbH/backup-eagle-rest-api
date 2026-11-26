@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Copy a report to a user defined group
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python copyReportToUserDefinedGroup.py --host="192.168.0.1" --user="admin" --password="admin" --report='{\"id\":\"71_139\",\"toUdg\":\"4\",\"activeMailing\":\"false\"}'

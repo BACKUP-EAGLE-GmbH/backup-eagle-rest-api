@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Delete role
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python deleteRole.py --host="192.168.0.1" --user="admin" --password="admin" --role-id="2"

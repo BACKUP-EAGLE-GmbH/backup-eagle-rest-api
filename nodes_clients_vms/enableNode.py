@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Activate and Deactivate nodes
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python enableNode.py --host="192.168.0.1" --user="admin" --password="admin" --enable="true" --node='{\"comment\":\"comment\",\"domainName\":\"domain-name\",\"nodeName\":\"node-name\",\"serverName\":\"server-name\",\"projectName\":\"project-name\"}'

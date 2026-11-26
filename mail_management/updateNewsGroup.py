@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Update newsgroup
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python updateNewsGroup.py --host="192.168.0.1" --user="admin" --password="admin" --group='{\"name\":\"All_PDFs\",\"pattern\":\"*.pdf\",\"subject\":\"BACKUP_EAGLE_Reports\",\"text\":\"BACKUP_EAGLE_Reports\"}'

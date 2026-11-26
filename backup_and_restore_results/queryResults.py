@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Query backup/restore results
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python queryResults.py --host="192.168.0.1" --user="admin" --password="admin" --result-options='{\"startTime\":\"2024-11-18T07:00:00\",\"endTime\":\"2024-11-19T07:00:00\",\"serverName\":\"Azure-Server-01\"}' --pretty-print=True

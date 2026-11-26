@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Create a device group
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python createDeviceGroup.py --host="192.168.0.1" --user="admin" --password="admin" --group='{\"name\":\"Test\",\"entries\":[{\"deviceTypePattern\":\"Device\"}]}'

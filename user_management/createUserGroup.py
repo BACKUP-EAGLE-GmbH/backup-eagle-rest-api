@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Create a user group
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python createUserGroup.py --host="192.168.0.1" --user="admin" --password="admin" --group='{\"name\":\"Admins\",\"description\":\"Administratoren\",\"directoryAlias\":\"admin\"}'

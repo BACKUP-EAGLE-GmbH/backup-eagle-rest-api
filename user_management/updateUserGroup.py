@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Update a user group
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python updateUserGroup.py --host="192.168.0.1" --user="admin" --password="admin" --group-id="2" --group='{\"name\":\"Admins\",\"description\":\"Administratoren\",\"directoryAlias\":\"admin\",\"roleIds\":[1,2]}'

@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Update a server group
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python updateServerGroup.py --host="192.168.0.1" --user="admin" --password="admin" --group-id="2" --group='{\"name\":\"ISP\",\"entries\":[{\"serverTypePattern\":\"ISP\"}]}'

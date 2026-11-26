@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Update Nodes, Clients and VMs
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python updateNodes.py --host="192.168.0.1" --user="admin" --password="admin" --data='{\"custom1\":\"new custom 1 field value\", \"nodeNameFilter\":\"win-app-001\"}'

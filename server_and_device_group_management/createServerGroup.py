@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Create a server group
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python createServerGroup.py --host="192.168.0.1" --user="admin" --password="admin" --group='{\"name\":\"ISP\",\"entries\":[{\"serverTypePattern\":\"ISP\"}]}'

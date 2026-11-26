@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Import backup-/restore results.
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python importResult.py --host="192.168.0.1" --user="admin" --password="admin" --result='{\"projectName\":\"testschedule\",\"baNode\":\"testnode\",\"baServer\":\"servername\",\"baNodeGroup\":\"domain\",\"objectName\":\"objekt\",\"startTime\":1645605007000,\"endTime\":1645606008000,\"rc\":8,\"schedStatus\":\"status\",\"schedResult\":8,\"schedStartTime\":1,\"bytes\":1024,\"savesetLevel\":22,\"bottleneck\":\"bottleneck\",\"bytesInspected\":1,\"transferRate\":1,\"compression\":1.0,\"readSize\":1,\"pool\":\"pool\",\"objectsInspected\":1,\"objectsAssigned\":1,\"objectsBackedUp\":1,\"objectsUpdated\":1,\"objectsRebound\":1,\"objectsDeleted\":1,\"objectsExpired\":1,\"objectsFailed\":1,\"subfileObjects\":1,\"reductionRatio\":1.0,\"processingTime\":1,\"action\":\"action\",\"transferredSize\":1,\"backupState\":\"state\",\"backupType\":\"backuptype\",\"objectType\":\"objecttype\",\"dedupFactor\":1.0,\"storagePolicy\":\"policy\",\"baObjects\":[{\"value\":\"InfoMessage\",\"type\":0},{\"value\":\"FehlerMeldung\",\"type\":8}]}'

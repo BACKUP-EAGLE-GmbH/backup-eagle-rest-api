@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Create a new RMAN catalog config
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python createRmanCatalogConfig.py --host="192.168.0.1" --user="admin" --password="admin" --config='{\"user\":\"user\",\"password\":\"password\",\"connectionString\":\"jdbc:oracle:thin:@192.168.111.100:1521:orcl\",\"active\":true,\"credentialsRequired\":true,\"scheme\":\"\"}'

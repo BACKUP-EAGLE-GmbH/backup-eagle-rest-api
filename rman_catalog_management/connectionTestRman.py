@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Test the RMAN catalog config to the RMAN database
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage: 
 # python connectionTestRman.py --host="192.168.0.1" --user="admin" --password="admin" --config-id="170018409"

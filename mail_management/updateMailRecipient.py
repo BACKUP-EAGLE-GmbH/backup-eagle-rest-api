@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Update mail recipient
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python updateMailRecipient.py --host="192.168.0.1" --user="admin" --password="admin" --mail='{\"id\":\"2\",\"name\":\"Max_Mustermann\",\"mail\":\"max@mustermann.de\"}'

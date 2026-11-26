@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - De-/activate a RMAN catalog config
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python enableRmanCatalogConfig.py --host="192.168.0.1" --user="admin" --password="admin" --config-id="1" --enable="true"

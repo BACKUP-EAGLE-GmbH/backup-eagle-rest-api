@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Query projects
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python queryProjects.py --host="192.168.0.1" --user="admin" --password="admin" --pretty-print=True

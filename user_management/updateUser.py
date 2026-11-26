@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Update a user
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python updateUser.py --host="192.168.0.1" --user="admin" --password="admin" --user-id="2" --userdata='{\"roleIds\":[1,2]}'

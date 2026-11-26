@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Update user defined group
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python updateUserDefinedGroup.py --host="192.168.0.1" --user="admin" --password="admin" --group='{\"id\":\"1\",\"name\":\"UDG-1\",\"addressList\":{\"id\":\"10\"},\"elements\":[{\"baServerName\":\"rzc-vm-w12-vem\",\"baNodeGroupName\":\"rzc-vm-lin-*\",\"baNodeOS\":\"*\",\"baNodeContact\":\"*\",\"baNodeActive\":\"true\",\"baServerActive\":\"true\",\"exclude\":\"false\"}]}'

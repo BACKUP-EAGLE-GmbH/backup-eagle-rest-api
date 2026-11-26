@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Create a role
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Example usage:
 # python createRole.py --host="192.168.0.1" --user="admin" --password="admin" --role='{\"roleId\":22,\"userDefGroupId\":1}'

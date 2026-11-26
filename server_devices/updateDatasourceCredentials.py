@@ -1,7 +1,7 @@
 #######################################################################################################
 #
 # Python Example - Set a password of all data sources whose name matches a pattern
-# (C) Schmitz RZ Consult GmbH - BACKUP EAGLE
+# (C) BACKUP EAGLE GmbH
 #
 # Password types (--password-type) and the data sources they apply to:
 #   client: client password of ISP data sources
