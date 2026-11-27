@@ -43,6 +43,7 @@ The examples are divided into topics. Each topic has its own folder:
 | ---------------------------------- | ---------------------------------- |
 | Backup & restore results           | backup_and_restore_results         |
 | Connection test to the REST API    | connection_test                    |
+| Monitoring of copy jobs (rsync, robocopy, xcopy) | copy_job_monitoring  |
 | Import of backup results           | import_backup_results              |
 | Mail management                    | mail_management                    |
 | Nodes, Clients, VMs                | nodes_clients_vms                  |
@@ -58,6 +59,64 @@ The examples are divided into topics. Each topic has its own folder:
 `server_devices/updateDatasourceCredentials.*` sets a password (client, https, ssh, smb, token or SNMPv3) of all data sources matching a name pattern.
 
 `user_defined_group_management/importNodesToUserDefinedGroup.*` imports node names from a file (one node per line) into a user defined group. The group is created or its entries are replaced, only the node name is filled (as `*<node>*` by default), all other columns are `*`.
+
+### Monitoring of copy jobs (rsync, robocopy, xcopy)
+
+Important data is often copied with rsync, robocopy or xcopy by scheduled tasks or cron jobs. These jobs fail silently: nobody notices a failed copy, and certainly not a copy that did not run at all. The wrapper scripts in `copy_job_monitoring` run the copy tool, evaluate its exit code and output and deliver the result with all error messages to BACKUP EAGLE®. The copy job then appears in BACKUP EAGLE® like a backup of any other backup software, with status, statistics and error messages in Client Control, reports, dashboards and alerts.
+
+The result can be delivered in three ways (`-Delivery` / `--delivery`):
+
+| Delivery            | How                                                                                     | Use when                                                        |
+| ------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `Rest` (default)    | `POST genericbackup/import-baresult`                                                    | the copy job can reach the REST API of BACKUP EAGLE®            |
+| `Database`          | INSERT into the import tables `BA_RESULT_IMPORT` and `BA_RESULT_DETAIL_IMPORT`           | the REST API is not activated, but the database can be reached  |
+| `Mail`              | mail in the format of the generic Mail-In parser to the Mail-In mailbox of BACKUP EAGLE® | the copy job has no direct connection to BACKUP EAGLE® (e.g. DMZ, customer site) |
+
+The error messages are transported on all three ways: as messages of type error (REST, database) or as lines `ERROR: ...` in the mail, which the Mail-In turns into error messages of the result. The database delivery inserts the result and its messages in one transaction, so BACKUP EAGLE® never imports a result without its messages.
+
+| Script                | Platform | Copy tool | Result failed (RC 8) if                                                     |
+| --------------------- | -------- | --------- | --------------------------------------------------------------------------- |
+| `monitorRobocopy.ps1` | Windows  | robocopy  | exit code 8 or higher (files could not be copied, fatal error)              |
+| `monitorXcopy.ps1`    | Windows  | xcopy     | exit code not 0 or any error message (xcopy returns 0 with `/C` despite errors) |
+| `monitorRsync.py`     | Linux    | rsync     | exit code not 0 (24 = vanished source files is only a warning by default)    |
+
+Sent are start and end time, status, copied and total bytes, number of files, the command line and the error messages (e.g. locked files, access denied). The scripts only evaluate the language independent parts of the output and work with every system language. The PowerShell wrappers need `BackupEagleDelivery.ps1` in the same folder.
+
+Setup:
+
+1. Create a backup server of the type **Generic** in BACKUP EAGLE® (e.g. `COPY_JOBS`) and pass its name as `-BaServer` / `--ba-server`. Nodes, node groups and jobs are created automatically with the first result.
+2. Prepare the delivery:
+   - `Rest`: activate the REST server and use a BACKUP EAGLE® user with the role admin or cc_admin.
+   - `Database`: a database user with INSERT rights on `BA_RESULT_IMPORT` and `BA_RESULT_DETAIL_IMPORT` (PostgreSQL/Oracle: also on the sequences `BA_RESULT_IMPORT_S` and `BA_RESULT_DETAIL_IMPORT_S`). PowerShell: SQL Server works without driver, PostgreSQL, MySQL and Oracle need the ODBC driver of the database (`-DbConnectionString "Driver={...};..."`). Python: `psycopg2`/`psycopg`, `pymysql`, `oracledb` or `pymssql`/`pyodbc`. The start and end time are written in the local time of the computer running the copy job, it should use the time zone of the BACKUP EAGLE® server.
+   - `Mail`: configure the Mail-In of BACKUP EAGLE® (mailbox and a backup assignment for the mails). The mails are recognized by the generic classification "Generic_Collector". As the Mail-In uses the time the mail was sent, start and end time of the result are the send time, the real times are part of the messages.
+3. Replace the copy command in the scheduled task or cron job by the wrapper:
+
+```powershell
+# Windows: store the password encrypted once (as the user that runs the scheduled task)
+Get-Credential | Export-Clixml C:\scripts\be_cred.xml
+# scheduled task action
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\scripts\monitorRobocopy.ps1 -Source D:\Data -Destination \\nas01\backup\Data -Options "/MIR /R:3 /W:10" -JobName DATA_TO_NAS -BaServer COPY_JOBS -BaseUrl https://192.168.0.1:10987/api/rest -CredentialFile C:\scripts\be_cred.xml
+```
+
+```powershell
+# Windows: delivery into the BACKUP EAGLE database (SQL Server, Windows authentication of the task user)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\scripts\monitorRobocopy.ps1 -Source D:\Data -Destination \\nas01\backup\Data -JobName DATA_TO_NAS -BaServer COPY_JOBS -Delivery Database -DbType SqlServer -DbConnectionString "Server=dbhost;Database=backupeagle;Integrated Security=true"
+# Windows: delivery by mail (SMTP login stored with Export-Clixml like above)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\scripts\monitorXcopy.ps1 -Source D:\Data -Destination \\nas01\backup\Data -JobName DATA_TO_NAS -BaServer COPY_JOBS -Delivery Mail -SmtpServer smtp.example.com -SmtpPort 587 -SmtpUseSsl -SmtpCredentialFile C:\scripts\smtp_cred.xml -MailFrom fileserver01@example.com -MailTo backupeagle-mailin@example.com
+```
+
+```console
+# Linux: rsync arguments after "--", password e.g. from a file that only the job user can read
+BACKUP_EAGLE_PASSWORD="$(cat /root/.be_password)" python3 ./copy_job_monitoring/monitorRsync.py --host="192.168.0.1" --user="admin" --job-name="DATA_TO_NAS" --ba-server="COPY_JOBS" -- -a --delete /data/ nas01:/backup/data/
+# Linux: delivery into the BACKUP EAGLE database (PostgreSQL)
+BACKUP_EAGLE_DB_PASSWORD="$(cat /root/.be_db_password)" python3 ./copy_job_monitoring/monitorRsync.py --delivery=database --db-type=postgresql --db-host="dbhost" --db-name="backupeagle" --db-user="be_import" --job-name="DATA_TO_NAS" --ba-server="COPY_JOBS" -- -a /data/ nas01:/backup/data/
+# Linux: delivery by mail
+BACKUP_EAGLE_SMTP_PASSWORD="$(cat /root/.smtp_password)" python3 ./copy_job_monitoring/monitorRsync.py --delivery=mail --smtp-server="smtp.example.com" --smtp-port=587 --smtp-starttls=True --smtp-user="linux01@example.com" --mail-from="linux01@example.com" --mail-to="backupeagle-mailin@example.com" --job-name="DATA_TO_NAS" --ba-server="COPY_JOBS" -- -a /data/ nas01:/backup/data/
+```
+
+4. Activate the **Non-started detection** (Report missing backups) in BACKUP EAGLE®. It alerts if a job does not deliver a result in the expected interval or time window, e.g. because the scheduled task was deleted, the server was down or the script hangs.
+
+Test a job with `-ShowResultOnly` / `--show-result-only=True`: the copy runs, the result (or the mail for the delivery `Mail`) is only printed instead of sent. Exit codes of the wrappers: 0 copy successful and result sent, 1 delivery failed (result not in BACKUP EAGLE®), 2 general error, 3 copy failed and result sent.
 
 ## Usage
 
